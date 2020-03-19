@@ -1,6 +1,7 @@
 #include "PhysicsObject.h"
 #include <cmath>
 
+
 PhysicsObject::PhysicsObject(){
     m_center = {0.,0.};
     m_theta = 0.0;
@@ -18,7 +19,7 @@ PhysicsObject::PhysicsObject(){
     }
 
 
-boost::python::tuple PhysicsObject::getVelocity(){
+std::tuple<float, float> PhysicsObject::getVelocity(){
     return (m_velocity.to_python() ); 
 }
 void PhysicsObject::setVelocity(float lin,float ang){
@@ -40,7 +41,7 @@ void PhysicsObject::stop(){
     m_setvel.angular = m_velocity.angular = 0;
 }
 
-boost::python::tuple PhysicsObject::getPosition(){
+std::tuple<float, float> PhysicsObject::getPosition(){
     return (m_center.to_python()); 
 }
 void PhysicsObject::setPosition(float x,float y){
@@ -48,11 +49,11 @@ void PhysicsObject::setPosition(float x,float y){
     m_center.y = y;
 }
 
-boost::python::tuple PhysicsObject::getPolygon(){
+std::vector<std::tuple<float, float>> PhysicsObject::getPolygon(){
     return (m_shape_temp.to_python());
 }
 
-void PhysicsObject::setPolygon(boost::python::tuple poly){
+void PhysicsObject::setPolygon(std::vector<std::tuple<float, float>> poly){
     m_shape.from_python(poly);
     m_shape_temp = m_shape;
 
@@ -68,10 +69,10 @@ void PhysicsObject::setMinAcceleration(float lin,float ang){
     m_minacc.angular = ang; 
 }
 
-boost::python::tuple PhysicsObject::getMaxAcceleration(){
+std::tuple<float, float> PhysicsObject::getMaxAcceleration(){
     return m_maxacc.to_python();
 }
-boost::python::tuple PhysicsObject::getMinAcceleration(){
+std::tuple<float, float> PhysicsObject::getMinAcceleration(){
     return m_minacc.to_python();
 }
 

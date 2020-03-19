@@ -1,13 +1,25 @@
 
-#include <boost/python.hpp>
-#include "PhysicsMotor.h"
-#include "../common/PeriodicProcess.h"
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include "./physics/PhysicsMotor.h"
+#include "./utils/PeriodicProcess.h"
+#include <optional>
 
-BOOST_PYTHON_MODULE(Physics)
+
+namespace py = pybind11;
+
+
+
+PYBIND11_MODULE(Physics, m) 
 {
-    using namespace boost::python;
-    class_<PhysicsMotor>("PhysicsMotor")
-    .def(init<>())
+
+    m.doc() = "Python bindings for an example library";
+
+
+    py::class_<PhysicsMotor>(m, "PhysicsMotor")
+    // Constructor
+    .def(py::init<>())
+
     // PeriodicProcess Method
     .def("start", &PeriodicProcess::start)
     .def("stop",&PeriodicProcess::stop)
