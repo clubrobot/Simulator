@@ -23,63 +23,7 @@ class Prob(printable):
 
     def set_proba(self, id_cube, proba):
         self.probas[id_cube] = proba
-        
 
-
-#Mettre les balls dans la soute
-#Faire drop (pas animation)
-
-class Ball(printable):
-    radius = 20
-    nb_element = 0
-    physics_core = Physics.PhysicsMotor()
-    physics_core.setTimestep(10)
-    physics_core.start()
-
-    def __init__(self,parent,color="green"):
-        printable.__init__(self,parent.canvas,0,0,0)
-        self.x = -1000.
-        self.y = -1000.
-        self.theta = 0.
-        self.color = color
-        self.parent = parent
-        self.points = 3
-        self.scored = None
-        self.name = "Ball_{}".format(Ball.nb_element)
-        self.parent.add(self)
-        Ball.nb_element+=1
-
-        Ball.physics_core.addObject(self.name)
-        Ball.physics_core.setPosition(self.name,self.x,self.y)
-        Ball.physics_core.disableObject(self.name)
-        self.shape = self.parent.canvas.create_arc(self.x+1.1414*Ball.radius,self.y+1.1414*Ball.radius, self.x-1.1414*Ball.radius,self.y-1.1414*Ball.radius,fill=self.color, start=0,extent=359.999)
-
-    def reset(self):
-        Ball.physics_core.disableObject(self.name)
-        Ball.physics_core.setPosition(self.name,-1000,-1000)
-        self.scored = None
-
-    def compute(self):
-        self.x , self.y = Ball.physics_core.getPosition(self.name)
-        #Verifions si il est présent à un bonne endroit !!
-        if(self.x<0 and math.fabs(self.y-2820)<180):
-            Ball.physics_core.setVelocity(self.name,0,0,True)
-
-            self.scored = "Orange"
-
-        if(self.x<0 and (math.fabs(self.y-180)<180)):
-            Ball.physics_core.setVelocity(self.name,0,0,True)
-
-            self.scored = "Green"
-
-            
-
-
-    def refresh(self):
-        self.parent.canvas.coords(self.shape,*self.parent.canvas.convert_polygon(((self.x+1.1414*Ball.radius,self.y+1.1414*Ball.radius),( self.x-1.1414*Ball.radius,self.y-1.1414*Ball.radius))  )  )
-
-    def __str__(self):
-        return "{} ball".format(self.color)
 
 
 class Dispenser():
@@ -110,27 +54,28 @@ class Dispenser():
 
     def getball(self,x,y,theta):
         if(math.hypot(y-self.y,x-self.x)<self.radius):
-            
+
             if(len(self.container)>0):# and theta>self.min_ang and theta<self.max_ang):
                 return self.container.pop()
         return None
 
 
-class Cube(Object):
-    cube_number = 0
-    def __init__(self,parent,color="blue",x=1000,y = 1000,theta = 0):
-        self.name = "Cube_{}".format(Cube.cube_number)
-        Cube.cube_number+=1
-        Object.__init__(self,self.name,parent,x,y,theta)
-        self.polygone  =((-28,-28),(-28,0),(-28,28),(0,28),(28,28),(28,0),(28,-28),(0,-28))
-        self.parent.core.setShape(self.name,self.polygone)
-        self.parent.core.setWeight(self.name,100)
+class Cup(Object):
+    number = 0
+    radius = 36
+    def __init__(self, parent, color="green", x=1000, y = 1000, theta = 0):
+        self.name = "Cup_{}".format(Cup.number)
+        Cup.number+=1
+        Object.__init__(self, self.name, parent, x, y, theta)
+        self.polygone  = ((-28,-28),(-28,0),(-28,28),(0,28),(28,28),(28,0),(28,-28),(0,-28))
+        self.parent.core.setShape(self.name, self.polygone)
+        self.parent.core.setWeight(self.name, 30)
         self.initial_coordinates = (x,y)
         self.shape = self.canvas.create_polygon(self.polygone)
         self.canvas.itemconfig(self.shape,fill =color)
         self.scored = None
         self.points = 5
-        
+
 
     def reset(self):
         self.parent.core.setPosition(self.name,*self.initial_coordinates)
@@ -138,7 +83,7 @@ class Cube(Object):
         self.scored = None
 
     def forward(self):
-         self.parent.core.setVelocity(self.name,100,0,False)
+        self.parent.core.setVelocity(self.name,100,0,False)
 
     def refresh(self):
         self.canvas.coords(self.shape,*(  self.canvas.convert_polygon(self.parent.core.getShape(self.name)) )  )
@@ -175,7 +120,7 @@ class Robot(Object):
         time.sleep(0.1)
         self.canvas.remove_components(self)
         self.parent.remove(self)
-    
+
     def pick_cube(self):
         #x , y = self.x , self.y
         #theta = self.theta
@@ -187,7 +132,7 @@ class Robot(Object):
                 self.parent.core.setPosition(cube_taken,-100,-100)
                 self.container.append(cube_taken)
                 break
-        
+
     def pick_ball(self):
         ball = self.parent.get_ball(self.x,self.y,self.theta)
         if(not ball is None and ball.color  == self.color):
@@ -202,7 +147,7 @@ class Robot(Object):
                 #Mettre le robot en dessou
                 self.parent.canvas.tag_lower(self.shape,ball.shape)
                 return
-        
+
     def fire_ball(self):
         if len(self.container_ball)>0:
             ball = self.container_ball.pop()
@@ -225,7 +170,7 @@ class Robot(Object):
         if len(self.container_ball_bis)>0: return True
         return False
 
-        
+
 
     def compute(self):
         self.x , self.y = self.parent.core.getPosition(self.name)

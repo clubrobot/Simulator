@@ -23,8 +23,8 @@ def key(event):
     global c
     global window
     global simu
-    
-    
+
+
     if(event.char =='z'):
         rob.setVelocity(1500,0)
         #c.forward()
@@ -50,7 +50,7 @@ def key(event):
 
 
 
-    
+
 
 #Paramètre de la fenêtre
 window = Tk()
@@ -73,7 +73,7 @@ Canvas.show()
 
 simu = Simulator(window,Canvas)
 servers = ServerManager(simu, None)
-simu.core.setMap(( (0,0),(0,3000),(2000,3000),(2000,2106), (1740,2106) ,(1740,894) ,(2000,894),(2000,0) ))
+simu.core.setMap(( (0,0),(0,3000),(2000,3000), (2000, 2067), (1850,2067), (1850,2089),(2000, 2089), (2000, 1467),(1700, 1467),(1700, 1489),(2000,1489),(2000, 867),(1850, 867), (1850,889), (2000, 889),(2000, 0)))
 simu.launch()
 
 
@@ -120,9 +120,6 @@ def points():
     Thread(target=coucou).start()
 
 
-
-
-
 ServerMenu.add_command(label='Lancer')#,command = Server.start)
 ServerMenu.add_command(label='Arrêter')#,command = Server.stop)
 ServerMenu.add_command(label='Paramètre')#,command = Server.setup)
@@ -138,68 +135,31 @@ speed_scale = tkinter.Scale(window, orient='horizontal', from_=0, to=2,resolutio
 speed_scale.pack(side=BOTTOM, padx = 2, pady = 2)
 speed_scale.set(1)
 
-
-
-#t=  ( (-57.5,-93.5),(-38.5,-112.5),(38.5,-112.5),(57.5,-93.5),(57.5,93.5),(38.5,112.5),(-38.5,112.5),(-57.5,93.5)) 
-
-
-
-#rob = Robot("bornibus",simu)
-
 #charge le geogebra
 map_source = GeoGebra("map_ressources.ggb")
 
-Cube_list = list()
+cup_list = list()
 pos_list = list()
-for x,y in map_source.getall("Cube_{J"):
-    c = Cube(simu,color="yellow",x=x,y=y)
-    Cube_list.append(c)
+for x,y in map_source.getall("Cup_{R"):
+    c = Cup(simu,color="red",x=x,y=y)
+    cup_list.append(c)
     pos_list += [c.initial_coordinates]
 
-probs = Prob(simu, pos_list)
-servers.probs = probs
-for x,y in map_source.getall("Cube_{N"):
-    c = Cube(simu,color="black",x=x,y=y)
-    Cube_list.append(c)
-    
-for x,y in map_source.getall("Cube_{B"):
-    c = Cube(simu,color="blue",x=x,y=y)
-    Cube_list.append(c)
-for x,y in map_source.getall("Cube_{O"):
-    c = Cube(simu,color="orange",x=x,y=y)
-    Cube_list.append(c)
-for x,y in map_source.getall("Cube_{V"):
-    c = Cube(simu,color="green",x=x,y=y)
-    Cube_list.append(c)
+for x,y in map_source.getall("Cup_{G"):
+    c = Cup(simu,color="green",x=x,y=y)
+    cup_list.append(c)
+    pos_list += [c.initial_coordinates]
 
-
-
-
-
-d1 = Dispenser(simu,840.0,0.0,125,"green")
-d2 = Dispenser(simu,2000.0,610.0,125,["orange","green"],min_ang=-2.356194000,max_ang=3.92699)
-d3 = Dispenser(simu,2000.0,2390.0,125,["green","orange"],min_ang=-2.356194000,max_ang=3.92699)
-d4 = Dispenser(simu,840.0,3000.0,125,"orange")
-
-def dispenser_reset():
-    global d1
-    global d2
-    global d3
-    d1.reset()
-    d2.reset()
-    d3.reset()
-    d4.reset()
-
-
-def cube_reset():
+print(cup_list)
+print(pos_list)
+def cup_reset():
     global Cube_list
-    for cube in Cube_list:
-        cube.reset()
+    for cup in cup_list:
+        cup.reset()
 
 
 def reset_all():
-    cube_reset()
-    dispenser_reset()
+    cup_reset()
 
 """
 
