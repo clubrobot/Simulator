@@ -2,13 +2,15 @@
 #define _PHYSICS_MOTOR_H_
 
 
-#include "../common/PhysicsUtils.h"
-#include "../common/PeriodicProcess.h"
+#include "../utils/PhysicsUtils.h"
+#include "../utils/PeriodicProcess.h"
 #include "PhysicsObject.h"
 #include <iostream>
 #include <map>
 #include <vector>
-#include <boost/python.hpp>
+#include <optional>
+#include <pybind11/stl.h>
+#include <pybind11/pybind11.h>
 
 
 #define MAX_OBJECT  64
@@ -24,18 +26,18 @@ public:
 
 
     // Map access
-    void setMap(boost::python::tuple m){m_map.from_python(m);}
-    boost::python::tuple getMap(){return m_map.to_python();}
+    void setMap(std::vector<std::tuple<float, float>> m){m_map.from_python(m);}
+    std::vector<std::tuple<float, float>> getMap(){return m_map.to_python();}
 
 
     // Object access
     void addObject(std::string name);
     void removeObject(std::string name);
-    std::string getObject(float x,float y,float threshold);
+    std::optional<std::string> getObject(float x,float y,float threshold);
     void enableObject(std::string name);
     void disableObject(std::string name);
 
-    void setShape(std::string name,boost::python::tuple poly);
+    void setShape(std::string name,std::vector<std::tuple<float, float>> poly);
     void setPosition(std::string name,float x,float y);
     void setTheta(std::string name,float t);
     void setWeight(std::string name,float weight);
@@ -44,13 +46,13 @@ public:
     void setMinAcceleration(std::string name,float lin,float vel);
 
 
-    boost::python::tuple getShape(std::string name);
-    boost::python::tuple getPosition(std::string name);
+    std::optional<std::vector<std::tuple<float, float>>> getShape(std::string name);
+    std::optional<std::tuple<float, float>> getPosition(std::string name);
     float                getTheta(std::string name);
     float                getWeight(std::string name);
-    boost::python::tuple getVelocity(std::string name);
-    boost::python::tuple getMaxAcceleration(std::string name);
-    boost::python::tuple getMinAcceleration(std::string name);
+    std::optional<std::tuple<float, float>> getVelocity(std::string name);
+    std::optional<std::tuple<float, float>> getMaxAcceleration(std::string name);
+    std::optional<std::tuple<float, float>> getMinAcceleration(std::string name);
     bool                 isCollided(std::string name);                
 
 

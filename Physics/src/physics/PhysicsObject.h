@@ -1,10 +1,11 @@
 #ifndef _PHYSICSOBJECT_H_
 #define _PHYSICSOBJECT_H_
 
-#include <boost/python.hpp>
+#include <vector>
 #include <tuple>
 #include <iostream>
-#include "../common/PhysicsUtils.h"
+#include <pybind11/stl.h>
+#include "../utils/PhysicsUtils.h"
 
 
 class PhysicsObject
@@ -17,7 +18,7 @@ public:
     void setPosition(float x,float y);
     void stop();
     void setTheta(float t){m_theta = t;}
-    void setPolygon(boost::python::tuple poly);
+    void setPolygon(std::vector<std::tuple<float, float>> poly);
     void setMaxAcceleration(float lin,float ang);
     void setMinAcceleration(float lin,float ang);
     void setWeight(float weight);
@@ -25,15 +26,15 @@ public:
     void disable(){m_enable=false;}
 
 
-    boost::python::tuple getMaxAcceleration();
-    boost::python::tuple getMinAcceleration();
-    boost::python::tuple getVelocity();
+    std::tuple<float, float> getMaxAcceleration();
+    std::tuple<float, float> getMinAcceleration();
+    std::tuple<float, float> getVelocity();
     float                getTheta(){return m_theta;}
     float                getWeight(){return m_theta;}
 
     Polygon getShape(){return m_shape_temp;}
-    boost::python::tuple getPosition();
-    boost::python::tuple getPolygon();
+    std::tuple<float, float> getPosition();
+    std::vector<std::tuple<float, float>> getPolygon();
 
     bool isCollided(){return m_collided;}
 

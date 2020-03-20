@@ -1,0 +1,4 @@
+[submodule "Physics/pybind11"]
+	path = Physics/pybind11
+	url = git@github.com:pybind/pybind11.git
+	tag = v2.4.3

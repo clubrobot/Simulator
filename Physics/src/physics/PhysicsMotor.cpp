@@ -1,6 +1,9 @@
 #include "PhysicsMotor.h"
 #include <cmath>
 #include <limits>
+
+
+
 Vector genVec(Point p1,Point p2){
     Vector vec= {p2.x-p1.x,p2.y-p1.y};
     return vec;
@@ -205,16 +208,13 @@ bool PhysicsMotor::collide(std::string name,PhysicsObject * main,std::vector<std
         }
 
     }
-    /*if(collided){
-        std::cout<<"aie"<<std::endl;
-    }*/
+
     // Si la vitesse est trop faible il n'y a pas de pattinage
     if(main->m_setvel.linear<5) collided = false;
     main->m_collided = collided;
 
     return false;
 
-    //teleporter les objects et determiner les vitesses
 }
 
 
@@ -261,7 +261,6 @@ void PhysicsMotor::move(PhysicsObject& p){
         }
 
     }
-    //std::cout<< p.m_velocity.linear*time_step*cosf(theta_temp)<<std::endl;
     p.m_center.x += p.m_velocity.linear*time_step*cosf(theta_temp);
     p.m_center.y += p.m_velocity.linear*time_step*sinf(theta_temp);
 
@@ -288,7 +287,7 @@ void PhysicsMotor::removeObject(std::string name){
     m_mtx.unlock();
 }
 
-std::string PhysicsMotor::getObject(float x,float y,float threshold){
+std::optional<std::string> PhysicsMotor::getObject(float x,float y,float threshold){
     m_mtx.lock();
     std::string result = "None";
     std::map<std::string,PhysicsObject>::iterator it;
@@ -299,6 +298,9 @@ std::string PhysicsMotor::getObject(float x,float y,float threshold){
         }
     }
     m_mtx.unlock();
+    if(it==m_objects.end()){
+        return std::nullopt;
+    }
     return result;
 }
 
@@ -311,7 +313,7 @@ void PhysicsMotor::disableObject(std::string object){
 }
 
 
-void PhysicsMotor::setShape(std::string name,boost::python::tuple poly){
+void PhysicsMotor::setShape(std::string name, std::vector<std::tuple<float, float>> poly){
     std::map<std::string,PhysicsObject>::iterator it;
     it = m_objects.find(name);
     if (it == m_objects.end()) return;
@@ -396,13 +398,13 @@ void PhysicsMotor::setMinAcceleration(std::string name,float lin,float vel){
 }
 
 
-boost::python::tuple PhysicsMotor::getShape(std::string name){
+std::optional<std::vector<std::tuple<float, float>>> PhysicsMotor::getShape(std::string name){
     std::map<std::string,PhysicsObject>::iterator it;
     it = m_objects.find(name);
-    if (it == m_objects.end()) return boost::python::make_tuple();
+    if (it == m_objects.end()) return std::nullopt;
 
     m_mtx.lock();
-    boost::python::tuple result = (it->second).getPolygon();
+    std::vector<std::tuple<float, float>> result = (it->second).getPolygon();
     m_mtx.unlock();
 
     return result;
@@ -412,13 +414,13 @@ boost::python::tuple PhysicsMotor::getShape(std::string name){
 
 
 
-boost::python::tuple PhysicsMotor::getPosition(std::string name){
+std::optional<std::tuple<float, float>> PhysicsMotor::getPosition(std::string name){
     std::map<std::string,PhysicsObject>::iterator it;
     it = m_objects.find(name);
-    if (it == m_objects.end()) return boost::python::make_tuple();
+    if (it == m_objects.end()) return std::nullopt;
 
     m_mtx.lock();
-    boost::python::tuple result = (it->second).getPosition();
+    std::tuple<float, float> result = (it->second).getPosition();
     m_mtx.unlock();
 
     return result;
@@ -461,13 +463,13 @@ float PhysicsMotor::getWeight(std::string name){
 
 }
 
-boost::python::tuple PhysicsMotor::getVelocity(std::string name){
+std::optional<std::tuple<float, float>> PhysicsMotor::getVelocity(std::string name){
     std::map<std::string,PhysicsObject>::iterator it;
     it = m_objects.find(name);
-    if (it == m_objects.end()) return boost::python::make_tuple();
+    if (it == m_objects.end()) return std::nullopt;
 
     m_mtx.lock();
-    boost::python::tuple result = (it->second).getVelocity();
+    std::tuple<float, float> result = (it->second).getVelocity();
     m_mtx.unlock();
 
     return result;
@@ -475,19 +477,19 @@ boost::python::tuple PhysicsMotor::getVelocity(std::string name){
 }
 
 
-boost::python::tuple PhysicsMotor::getMaxAcceleration(std::string name){
+std::optional<std::tuple<float, float>> PhysicsMotor::getMaxAcceleration(std::string name){
     std::map<std::string,PhysicsObject>::iterator it;
     it = m_objects.find(name);
-    if (it == m_objects.end()) return boost::python::make_tuple();
+    if (it == m_objects.end()) return std::nullopt;
 
     return (it->second).getMaxAcceleration();
 
 }
 
-boost::python::tuple PhysicsMotor::getMinAcceleration(std::string name){
+std::optional<std::tuple<float, float>> PhysicsMotor::getMinAcceleration(std::string name){
     std::map<std::string,PhysicsObject>::iterator it;
     it = m_objects.find(name);
-    if (it == m_objects.end()) return boost::python::make_tuple();
+    if (it == m_objects.end()) return std::nullopt;
 
     return (it->second).getMinAcceleration();
 
