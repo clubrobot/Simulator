@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from Server_utils.Components_virtual import SerialTalksComponent
-from serialutils import *
+from common.serialutils import *
 from math import *
 import time
 

@@ -5,26 +5,6 @@ from Server_utils.Waterdispenser_virtual import *
 import math
 
 
-class Prob(printable):
-    nb_digits = 4
-    def __init__(self, parent, pos_actions):
-        printable.__init__(self, parent.canvas, 0, 0, 0)
-        self.probas = []
-        self.actions = []
-        self.Canvas = parent.canvas
-        for pos in pos_actions:
-            self.actions += [self.Canvas.create_text((self.Canvas.width - (pos[1]+100)*self.Canvas.width/3000, self.Canvas.height - (pos[0]+100)*self.Canvas.height/2000), text="0")]
-            self.probas += [0]
-
-
-    def refresh(self):
-        for i in range(len(self.actions)):
-            self.Canvas.itemconfig(self.actions[i], text=str(int(self.probas[i] * 100)))
-
-    def set_proba(self, id_cube, proba):
-        self.probas[id_cube] = proba
-
-
 
 class Dispenser():
     def __init__(self,parent,x,y,radius,color,capacity= 8,min_ang=-0.785398,max_ang=0.785398):
@@ -67,14 +47,19 @@ class Cup(Object):
         self.name = "Cup_{}".format(Cup.number)
         Cup.number+=1
         Object.__init__(self, self.name, parent, x, y, theta)
-        self.polygone  = ((-28,-28),(-28,0),(-28,28),(0,28),(28,28),(28,0),(28,-28),(0,-28))
+        self.polygone  = ((-Cup.radius*math.sqrt(2),-Cup.radius*math.sqrt(2)),
+                          (Cup.radius*math.sqrt(2),-Cup.radius*math.sqrt(2)),
+                          (Cup.radius*math.sqrt(2),Cup.radius*math.sqrt(2)),
+                          (-Cup.radius*math.sqrt(2),Cup.radius*math.sqrt(2)))
         self.parent.core.setShape(self.name, self.polygone)
         self.parent.core.setWeight(self.name, 30)
         self.initial_coordinates = (x,y)
-        self.shape = self.canvas.create_polygon(self.polygone)
+        self.shape = self.canvas.create_arc(*(self.polygone[0]+self.polygone[2]), fill=color, start=0,extent=359.999)
         self.canvas.itemconfig(self.shape,fill =color)
         self.scored = None
         self.points = 5
+        self.parent.core.setPosition(self.name,*self.initial_coordinates)
+
 
 
     def reset(self):
@@ -86,7 +71,8 @@ class Cup(Object):
         self.parent.core.setVelocity(self.name,100,0,False)
 
     def refresh(self):
-        self.canvas.coords(self.shape,*(  self.canvas.convert_polygon(self.parent.core.getShape(self.name)) )  )
+        poly = self.canvas.convert_polygon(self.parent.core.getShape(self.name)) 
+        self.canvas.coords(self.shape, poly[0], poly[1] ,poly[4],poly[5] ) 
 
 
 class Robot(Object):
