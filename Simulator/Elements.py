@@ -47,14 +47,14 @@ class Cup(Object):
         self.name = "Cup_{}".format(Cup.number)
         Cup.number+=1
         Object.__init__(self, self.name, parent, x, y, theta)
-        self.polygone  = ((-Cup.radius*math.sqrt(2),-Cup.radius*math.sqrt(2)),
-                          (Cup.radius*math.sqrt(2),-Cup.radius*math.sqrt(2)),
-                          (Cup.radius*math.sqrt(2),Cup.radius*math.sqrt(2)),
-                          (-Cup.radius*math.sqrt(2),Cup.radius*math.sqrt(2)))
+        self.polygone  = ((-Cup.radius,-Cup.radius),
+                          (Cup.radius,-Cup.radius),
+                          (Cup.radius,Cup.radius),
+                          (-Cup.radius,Cup.radius))
         self.parent.core.setShape(self.name, self.polygone)
         self.parent.core.setWeight(self.name, 30)
         self.initial_coordinates = (x,y)
-        self.shape = self.canvas.create_arc(*(self.polygone[0]+self.polygone[2]), fill=color, start=0,extent=359.999)
+        self.shape = self.canvas.create_oval(*self.canvas.convert_polygon((self.polygone[0],self.polygone[2])), fill=color)
         self.canvas.itemconfig(self.shape,fill =color)
         self.scored = None
         self.points = 5
