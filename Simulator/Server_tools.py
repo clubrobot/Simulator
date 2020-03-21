@@ -161,6 +161,7 @@ class ServerManager(Thread):
 
                     #self.lock.acquire()
                     self.server.connect(timeout=0.5)
+                    print("lol")
                     self.rob_temp.setPosition(1000,1000,0)
                     color = "green" if color=="orange" else "orange"
 
@@ -177,7 +178,7 @@ class ServerManager(Thread):
                     self.nb_connect+=1
                     self.robots.append(self.rob_temp)
                     self.rob_temp =Robot("rob_{}".format(self.nb_connect),self.simulator,color,x=-1000,y =-1000)
-                    time.sleep(1)
+                    time.sleep(1.5)
                     self.server.availiable_components = {}
                     for arduino in self.rob_temp.arduinos:
                         self.server.addcomponent(arduino)
