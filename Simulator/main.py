@@ -61,7 +61,8 @@ window.resizable(width=False,height=False)
 #window.bind("<KeyPress>", key)
 
 
-
+#charge le geogebra
+map_source = GeoGebra("map_ressources.ggb")
 
 #window.geometry("800x533")
 style = Style()
@@ -73,7 +74,9 @@ Canvas.show()
 
 simu = Simulator(window,Canvas)
 servers = ServerManager(simu, None)
-simu.core.setMap(( (0,0),(0,3000),(2000,3000), (2000, 2067), (1850,2067), (1850,2089),(2000, 2089), (2000, 1467),(1700, 1467),(1700, 1489),(2000,1489),(2000, 867),(1850, 867), (1850,889), (2000, 889),(2000, 0)))
+
+map_shape = map_source.getall("Map_*")
+simu.core.setMap(map_shape)
 simu.launch()
 
 
@@ -101,23 +104,6 @@ OutilMenu.add_command(label='Préférence connexion')
 OutilMenu.add_command(label='Préférence IA')
 OutilMenu.add_command(label='Manette')
 
-def coucou():
-    global simu
-    time.sleep(100)
-    score  = simu.getPoints()
-    if(score[0]>score[1]):
-        message = "Orange Gagne avec {} contre {}".format(*score)
-    if(score[0]<score[1]):
-        message = "Vert Gagne avec {} contre {}".format(score[1],score[0])
-    if(score[0]==score[1]):
-        message = "match nul avec {} partout".format(score[0])
-    showinfo("RESULTAT", message)
-
-
-
-
-def points():
-    Thread(target=coucou).start()
 
 
 ServerMenu.add_command(label='Lancer')#,command = Server.start)
@@ -135,8 +121,7 @@ speed_scale = tkinter.Scale(window, orient='horizontal', from_=0, to=2,resolutio
 speed_scale.pack(side=BOTTOM, padx = 2, pady = 2)
 speed_scale.set(1)
 
-#charge le geogebra
-map_source = GeoGebra("map_ressources.ggb")
+
 
 cup_list = list()
 pos_list = list()
@@ -150,8 +135,6 @@ for x,y in map_source.getall("Cup_{G"):
     cup_list.append(c)
     pos_list += [c.initial_coordinates]
 
-print(cup_list)
-print(pos_list)
 def cup_reset():
     global Cube_list
     for cup in cup_list:
@@ -161,11 +144,7 @@ def cup_reset():
 def reset_all():
     cup_reset()
 
-"""
 
-rob = Robot("dem",simu)
-rob.setPosition(1000,1000,0)
-"""
 servers.bind_reset_function(reset_all)
 
 
