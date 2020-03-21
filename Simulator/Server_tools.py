@@ -178,6 +178,7 @@ class ServerManager(Thread):
                     self.robots.append(self.rob_temp)
                     self.rob_temp =Robot("rob_{}".format(self.nb_connect),self.simulator,color,x=-1000,y =-1000)
                     time.sleep(1)
+                    self.server.availiable_components = {}
                     for arduino in self.rob_temp.arduinos:
                         self.server.addcomponent(arduino)
 
