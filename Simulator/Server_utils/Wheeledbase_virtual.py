@@ -376,7 +376,8 @@ class Wheeledbase(SerialTalksComponent):
         self.goalParam = 0
         self.goalReached = False
         
-    def start_turnonthespot(self,angle):
+    def start_turnonthespot(self,angle, _):
+        # TODO implement path way
         self.follow_spot = True
         self.spin_error= False
         self.follow_path =False
