@@ -45,11 +45,12 @@ def get_resolution(width):
 
             
 class Canvas_area(tkinter.Canvas,Thread):
-    def __init__(self,parent,color= '#333',width=999,height=664):
+    def __init__(self,parent,color= '#333',width=999+60,height=664+60, margin=60):
         tkinter.Canvas.__init__(self,parent, width= width,height=height,bg=color)
         self.components = []
         self.height= height
         self.width = width
+        self.margin = margin
         self.picture_link = ''
         self.pack()
 
@@ -72,15 +73,14 @@ class Canvas_area(tkinter.Canvas,Thread):
     def update_resolution(self):
         width = tkinter.IntVar()
         width.set(600)
-        self.widt = get_resolution(width)
-        print(width.get())
+        self.width = get_resolution(width)
         self.config(width = self.width,height= self.width*(2/3))
         self.add_background(self.picture_link)
 
     def add_background(self,picture):
         self.picture_link = picture
         img = Image.open(picture, 'r')
-        img = img.resize((self.width,self.height))
+        img = img.resize((self.width-self.margin,self.height-self.margin))
         img.save('background_redim.gif')
         img.close()
         self.photo = tkinter.PhotoImage(file="background_redim.gif")
@@ -97,8 +97,8 @@ class Canvas_area(tkinter.Canvas,Thread):
     def convert_polygon(self,tupl):
         result = []
         for (x,y) in tupl:
-            result.append(self.width-y*self.width/3000)
-            result.append(  self.height-x*self.height/2000 )  
+            result.append((self.width)-y*(self.width-self.margin)/3000-self.margin/2 )
+            result.append(  (self.height)-x*(self.height-self.margin)/2000-self.margin/2 )  
         return tuple(result)
 
 
