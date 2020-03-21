@@ -111,7 +111,7 @@ ServerMenu.add_command(label='Arrêter')#,command = Server.stop)
 ServerMenu.add_command(label='Paramètre')#,command = Server.setup)
 
 
-launch_button = Button(window, text="Start",takefocus=False,command=points)
+launch_button = Button(window, text="Start",takefocus=False)
 launch_button.pack(side=LEFT ,padx = 10, pady = 1)
 
 reset = Button(window, text="reset",takefocus=False,command=servers.kick_all)

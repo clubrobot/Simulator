@@ -52,13 +52,13 @@ class Cup(Object):
                           (Cup.radius,Cup.radius),
                           (-Cup.radius,Cup.radius))
         self.parent.core.setShape(self.name, self.polygone)
-        self.parent.core.setWeight(self.name, 30)
+        self.parent.core.setWeight(self.name, 200)
         self.initial_coordinates = (x,y)
         self.shape = self.canvas.create_oval(*self.canvas.convert_polygon((self.polygone[0],self.polygone[2])), fill=color)
         self.canvas.itemconfig(self.shape,fill =color)
         self.scored = None
         self.points = 5
-        self.parent.core.setPosition(self.name,*self.initial_coordinates)
+
 
 
 
@@ -81,7 +81,6 @@ class Robot(Object):
         self.polygone = ( (-57.5,-93.5),(-57.5,93.5),(-38.5,112.5),(38.5,112.5) ,(57.5,93.5),(57.5,-93.5),(38.5,-112.5),(-38.5,-112.5) )
         #self.polygone  =(  (-93.5,57.5) , (93.5,57.5),(112.5,38.5) ,(112.5,-38.5),(93.5,-57.5),(-93.5,-57.5),(-112.5,-38.5),(-112.5,38.5))
         #self.polygone = ( (-100,40),(100,40),(100,-40),(-100,-40)  )
-        print("Je suis un nouveau robot {}".format(color))
         self.parent.core.setShape(self.name,self.polygone)
         self.shape = self.canvas.create_polygon(self.polygone)
         self.color = color
