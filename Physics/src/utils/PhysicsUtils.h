@@ -69,7 +69,7 @@ typedef struct point{
     float y;
     } Point;
 
-typedef struct {
+typedef struct Polygon{
     std::vector<std::tuple<float, float>> to_python(){
         std::vector<std::tuple<float, float>> result;
         int i;
