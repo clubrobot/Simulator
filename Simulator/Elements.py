@@ -2,6 +2,8 @@ from Physics_tools import *
 from Server_utils.Wheeledbase_virtual import *
 from Server_utils.Buildingcollector_virtual import *
 from Server_utils.Waterdispenser_virtual import *
+from Server_utils.display_virtual import *
+from Server_utils.sensors_virtual import *
 import math
 
 
@@ -86,7 +88,7 @@ class Robot(Object):
         self.shape = self.canvas.create_polygon(self.polygone)
         self.color = color
         self.parent.core.setWeight(self.name, 3000)
-        self.arduinos = [Wheeledbase(self)]
+        self.arduinos = [Wheeledbase(self), Display(self), Sensors(self)]
         self.parent.core.setMaxAcceleration(self.name, 200, 2)
         self.parent.core.setMinAcceleration(self.name, 200, 2)
 
